@@ -1,5 +1,5 @@
 import * as echarts from 'echarts';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowUpRight, LineChart, PieChart, BarChart, AlertCircle } from 'lucide-react';
 
@@ -28,7 +28,6 @@ interface WeeklyAndMonthTrendProps {
 const WeeklyAndMonthTrend = ({ analytics, isLoading, budget }: WeeklyAndMonthTrendProps) => {
   const chartInstance = useRef<echarts.ECharts | null>(null);
   const chartRef = useRef<HTMLDivElement>(null);
-  const [chartIsInitialized, setChartIsInitialized] = useState(false);
 
   // Calculate total monthly spent for contribution percentage and summary
   const weeklySpent = analytics?.weeklyStats?.weeks?.map(week => week.totalSpent) || [];
@@ -70,7 +69,7 @@ const WeeklyAndMonthTrend = ({ analytics, isLoading, budget }: WeeklyAndMonthTre
 
   // Initialize main chart with better error handling
   useEffect(() => {
-    if (chartRef.current && analytics && chartIsInitialized) {
+    if (chartRef.current && analytics) {
       chartInstance.current = echarts.init(chartRef.current);
 
       // Chart options
@@ -188,15 +187,7 @@ const WeeklyAndMonthTrend = ({ analytics, isLoading, budget }: WeeklyAndMonthTre
       chartInstance.current?.dispose();
       chartInstance.current = null;
     };
-  }, [
-    totalMonthlySpent,
-    chartData,
-    xLabels,
-    analytics,
-    chartIsInitialized,
-    currencySymbol,
-    isLoading,
-  ]);
+  }, [totalMonthlySpent, chartData, xLabels, analytics, currencySymbol, isLoading]);
 
   // Handle window resize to make chart responsive
   useWindowResize(() => chartInstance.current?.resize());
@@ -221,10 +212,7 @@ const WeeklyAndMonthTrend = ({ analytics, isLoading, budget }: WeeklyAndMonthTre
 
       {/* Echarts Container */}
       <div
-        ref={el => {
-          chartRef.current = el;
-          setChartIsInitialized(true);
-        }}
+        ref={chartRef}
         className="h-[200px] w-full mx-auto"
         style={{ marginBottom: '-10px', marginLeft: '-10px' }}
       />

@@ -1,7 +1,6 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
-import RecentTransactions from '@/components/dashboard/RecentTransactions';
 import { useSearchParams } from 'react-router-dom';
-import { notifications } from '@/lib/notifications';
+import { motion, AnimatePresence } from 'framer-motion';
 
 import {
   CreditCard,
@@ -22,8 +21,8 @@ import {
   Home,
 } from 'lucide-react';
 
-import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import RecentTransactions from '@/components/dashboard/RecentTransactions';
 
 // Import Recharts components
 import {
@@ -299,35 +298,39 @@ export const Dashboard: React.FC = () => {
   };
 
   // Get current month budget
-  const { data, error, isLoading } = useQuery({
+  const {
+    data: budget,
+    error,
+    isLoading,
+  } = useQuery({
     enabled: true,
-    queryKey: ['currDashboardData', month, year],
+    queryKey: ['currMonthBudget', month, year],
     queryFn: async ({ queryKey }) => {
-      try {
-        const [, month, year] = queryKey;
-        const budget = await budgetApi.getBudgetByMonthAndYear(month, year);
-        const analytics = await budgetApi.getCurrentMonthAnalytics(month, year);
+      const [, month, year] = queryKey;
+      const budget = await budgetApi.getBudgetByMonthAndYear(month, year);
 
-        return { budget, analytics };
-      } catch (error) {
-        const { message } = formatErrorMessage(error);
-
-        notifications.error('Error fetching budget data', {
-          description: message,
-        });
-
-        return null;
-      }
+      return budget;
     },
   });
 
-  const { budget, analytics } = data || {};
   const { status } = formatErrorMessage(error);
   const budgetNotFound = status === 404;
 
+  // Get current month analytics
+  const { data: analytics, isLoading: isAnalyticsLoading } = useQuery({
+    enabled: true,
+    queryKey: ['currMonthAnalytics', month, year],
+    queryFn: async ({ queryKey }) => {
+      const [, month, year] = queryKey;
+      const analytics = await budgetApi.getCurrentMonthAnalytics(month, year);
+
+      return analytics;
+    },
+  });
+
   // Check if spending exceeds budget
   const isOverBudget = Number(budget?.amountSpent) > Number(budget?.amountBudgeted);
-  const isFetchingData = useDeferredLoading(isLoading, 1000);
+  const isFetchingData = useDeferredLoading(isLoading || isAnalyticsLoading, 500);
 
   return (
     <div className="relative space-y-4 pb-10 max-w-7xl mx-auto">

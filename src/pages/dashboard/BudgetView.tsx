@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, BarChart4 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import CategoryList from '@/components/dashboard/CategoryList';
+import CategoryList from '@/components/budget-view/CategoryList';
 import type { Category, IBudgetProps } from '@/app/api/budgets';
 
 // Mock API call to fetch budget data

@@ -47,7 +47,6 @@ import dayjs from 'dayjs';
 import useDeferredLoading from '@/hooks/useDeferredLoading';
 import BannerLoading from '@/components/BannerLoading';
 import ManagementCard from '@/components/dashboard/BudgetManagement/ManagementCard';
-import TransactionInfoCard from '@/components/dashboard/TransactionInfoCard';
 
 export const Dashboard: React.FC = () => {
   const contentRef = useRef<HTMLDivElement>(null);

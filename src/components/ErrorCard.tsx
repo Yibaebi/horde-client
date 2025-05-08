@@ -16,7 +16,7 @@ interface ErrorCardProps {
  */
 
 const ErrorCard: FC<ErrorCardProps> = ({ error, reload }) => {
-  const { errorMessage, apiError } = formatErrorMessage(error);
+  const { message, apiError } = formatErrorMessage(error);
 
   return (
     <div className="container max-w-5xl mx-auto py-12 px-4 relative">
@@ -29,7 +29,7 @@ const ErrorCard: FC<ErrorCardProps> = ({ error, reload }) => {
               </div>
 
               <h2 className="text-xl font-bold text-gray-800 mb-2">Error Loading Budgets</h2>
-              <p className="text-gray-600">{errorMessage}</p>
+              <p className="text-gray-600">{message}</p>
             </div>
           </div>
 

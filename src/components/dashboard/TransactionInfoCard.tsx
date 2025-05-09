@@ -16,11 +16,6 @@ const TransactionInfoCard = ({ analytics, budget }: TransactionInfoCardProps) =>
   const largestTransaction = analytics?.largestTransaction || 0;
   const currencySymbol = budget?.currencySym || '';
 
-  // If there are no transactions, show the empty state
-  if (!budget) {
-    return <TransactionInfoCardEmpty />;
-  }
-
   return (
     <motion.div
       className="border border-primary-80 bg-primary-5 rounded-xl shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)]"
@@ -104,7 +99,7 @@ export const TransactionInfoCardSkeleton = () => {
 };
 
 // Empty state component for TransactionInfoCard
-const TransactionInfoCardEmpty = () => {
+export const TransactionInfoCardEmpty = () => {
   return (
     <motion.div
       className="bg-white rounded-xl shadow-[0px_7px_29px_0px_rgba(100,100,111,0.2)] border border-slate-200"

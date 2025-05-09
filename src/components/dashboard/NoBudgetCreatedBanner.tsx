@@ -6,18 +6,22 @@ import Banner from '@/components/ui/Banner';
 
 interface NoBudgetCreatedBannerProps {
   budgetNotFound: boolean;
+  month: number;
+  year: number;
   isLoading?: boolean;
 }
 
-const NoBudgetCreatedBanner = ({ budgetNotFound }: NoBudgetCreatedBannerProps) => {
+const NoBudgetCreatedBanner = ({ budgetNotFound, month, year }: NoBudgetCreatedBannerProps) => {
   const navigate = useNavigate();
 
   const currentMonth = getCurrentMonth();
   const currentYear = getCurrentYear();
   const currentMonthName = getMonthName(currentMonth);
 
+  const shouldShowBanner = year === currentYear && month === currentMonth && budgetNotFound;
+
   return (
-    budgetNotFound && (
+    shouldShowBanner && (
       <AnimatePresence>
         <motion.div
           initial={{ opacity: 0, height: 0, y: -30, scaleY: 0.8 }}

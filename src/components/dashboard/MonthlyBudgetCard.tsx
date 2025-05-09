@@ -65,7 +65,7 @@ export const MonthlyBudgetCard = ({
     : 'No transactions yet';
 
   return (
-    <div className="col-span-1 bg-gradient-to-br from-primary to-violet-600 rounded-lg p-6 shadow-lg relative overflow-hidden text-white">
+    <div className="col-span-1 bg-gradient-to-br from-primary to-violet-600 rounded-lg p-6 shadow-lg relative overflow-hidden text-white h-full">
       <div className="flex justify-between items-center">
         <h3 className="font-medium text-white/90">Monthly Summary</h3>
 

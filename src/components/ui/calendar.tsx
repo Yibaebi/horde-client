@@ -9,7 +9,7 @@ type MonthYearPickerProps = {
   onMonthYearChange?: (date: Date) => void;
   onApply?: () => void;
   onClose?: () => void;
-  defaultMonth?: Date;
+  defaultDate?: Date;
 };
 
 function MonthYearPicker({
@@ -17,38 +17,40 @@ function MonthYearPicker({
   onMonthYearChange,
   onApply,
   onClose,
-  defaultMonth = dayjs().toDate(),
+  defaultDate = dayjs().toDate(),
 }: MonthYearPickerProps) {
   // Use controlled state instead of useNavigation hook
-  const [currentMonth, setCurrentMonth] = useState<Date>(dayjs(defaultMonth).toDate());
+  const [currentDate, setCurrentDate] = useState<Date>(dayjs(defaultDate).toDate());
+  const today = dayjs().toDate();
+  const currentYear = dayjs(currentDate).year();
 
   useEffect(() => {
-    onMonthYearChange?.(currentMonth);
-  }, [currentMonth, onMonthYearChange]);
+    onMonthYearChange?.(currentDate);
+  }, [currentDate, onMonthYearChange]);
 
   // Navigation functions
-  const goToMonth = (date: Date) => setCurrentMonth(date);
+  const goToDate = (date: Date) => setCurrentDate(date);
 
   // Get today for highlighting
-  const today = dayjs().toDate();
-  const isCurrentMonth = (month: number) =>
-    month === dayjs(today).month() && dayjs(currentMonth).year() === dayjs(today).year();
+  const isCurrentDate = (date: Date) =>
+    date.getMonth() === today.getMonth() && date.getFullYear() === today.getFullYear();
 
   // Custom month buttons renderer
   const renderMonthButtons = () => {
     return (
       <div className="mt-2 grid grid-cols-4 gap-1.5">
         {Array.from({ length: 12 }).map((_, month) => {
-          const date = dayjs(currentMonth).year(dayjs(currentMonth).year()).month(month).toDate();
-          const isSelected = month === dayjs(currentMonth).month();
-          const isCurrent = isCurrentMonth(month);
+          const date = dayjs(currentDate).year(currentYear).month(month).toDate();
+          const isCurrent = isCurrentDate(date);
+          const isSelected = dayjs(currentDate).isSame(date, 'month');
           const monthName = dayjs(date).format('MMM');
 
           return (
             <button
               key={month}
               onClick={() => {
-                goToMonth(date);
+                goToDate(date);
+
                 if (onMonthYearChange) {
                   onMonthYearChange(date);
                 }
@@ -98,8 +100,8 @@ function MonthYearPicker({
         <div className="flex items-center rounded-md border border-primary/30 shadow-sm bg-primary/10 px-1">
           <button
             onClick={() => {
-              const newDate = dayjs(currentMonth).subtract(1, 'year').toDate();
-              goToMonth(newDate);
+              const newDate = dayjs(currentDate).subtract(1, 'year').toDate();
+              goToDate(newDate);
             }}
             className="text-primary bg-white hover:text-white hover:bg-primary rounded-l-sm px-2 py-1.5 text-xs transition-colors cursor-pointer"
           >
@@ -107,13 +109,13 @@ function MonthYearPicker({
           </button>
 
           <span className="px-3 py-1.5 font-semibold text-primary text-sm">
-            {dayjs(currentMonth).year()}
+            {dayjs(currentDate).year()}
           </span>
 
           <button
             onClick={() => {
-              const newDate = dayjs(currentMonth).add(1, 'year').toDate();
-              goToMonth(newDate);
+              const newDate = dayjs(currentDate).add(1, 'year').toDate();
+              goToDate(newDate);
             }}
             className="text-primary bg-white hover:text-white hover:bg-primary rounded-r-sm px-2 py-1.5 text-xs transition-colors cursor-pointer"
           >
@@ -152,14 +154,16 @@ function MonthYearPicker({
         <button
           onClick={() => {
             const todayDate = dayjs().toDate();
-            goToMonth(todayDate);
+            goToDate(todayDate);
+
             if (onMonthYearChange) {
               onMonthYearChange(todayDate);
             }
           }}
-          className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 bg-gray-50 hover:bg-gray-100 rounded-md border border-gray-200 transition-colors"
+          disabled={isCurrentDate(currentDate)}
+          className="px-3 py-1 text-xs text-gray-600 hover:text-gray-800 bg-gray-50 hover:bg-gray-100 rounded-md border border-gray-200 transition-colors disabled:hover:bg-gray-50 disabled:opacity-50 disabled:!cursor-not-allowed"
         >
-          Today
+          Current Month
         </button>
 
         {onApply && (

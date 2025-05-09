@@ -7,7 +7,11 @@ import { formatCurrencyWithSymbol } from '@/lib/utils';
 import useWindowResize from '@/hooks/useWindowResize';
 import type { ICurrentMonthAnalyticsData } from '@/types/api';
 import type { IBudgetProps } from '@/app/api/budgets';
-import TransactionInfoCard, { TransactionInfoCardSkeleton } from './TransactionInfoCard';
+
+import TransactionInfoCard, {
+  TransactionInfoCardEmpty,
+  TransactionInfoCardSkeleton,
+} from './TransactionInfoCard';
 
 // Define types for tooltip formatter
 interface TooltipDataItem {
@@ -399,6 +403,10 @@ const WeeklyAndMonthTrendEmpty = () => {
           </div>
         </div>
       </div>
+
+      <div className="h-[1px] my-4 bg-primary-20"></div>
+
+      <TransactionInfoCardEmpty />
     </div>
   );
 };
@@ -450,6 +458,8 @@ const WeeklyAndMonthTrendSkeleton = () => {
           <div className="h-3 bg-gray-200 rounded w-32 mt-3 animate-pulse"></div>
         </div>
       </div>
+
+      <div className="h-[1px] my-4 bg-primary-20"></div>
 
       <TransactionInfoCardSkeleton />
     </div>

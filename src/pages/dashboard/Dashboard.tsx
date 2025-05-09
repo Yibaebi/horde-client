@@ -334,9 +334,9 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="relative space-y-4 pb-10 max-w-7xl mx-auto">
-      {isFetchingData ? (
-        <BannerLoading />
-      ) : (
+      <BannerLoading isVisible={isFetchingData} />
+
+      {!isFetchingData && (
         <>
           {isOverBudget && (
             <Banner
@@ -348,16 +348,14 @@ export const Dashboard: React.FC = () => {
             />
           )}
 
-          <NoBudgetCreatedBanner budgetNotFound={budgetNotFound} />
+          <NoBudgetCreatedBanner month={month} year={year} budgetNotFound={budgetNotFound} />
         </>
       )}
-
-      {/* Budget Management Card */}
 
       {/* Redesigned Header Section */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 my-2">
         <div className="flex flex-col gap-4 h-full">
-          <div className="col-span-1 bg-gradient-to-br from-primary to-violet-600 rounded-lg p-6 shadow-lg relative text-white">
+          <div className="bg-gradient-to-br from-primary to-violet-600 rounded-lg p-6 shadow-lg relative text-white">
             <ManagementCard
               budget={budget}
               defaultMonth={month}

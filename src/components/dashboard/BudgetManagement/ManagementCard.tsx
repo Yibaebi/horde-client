@@ -143,7 +143,7 @@ const ManagementCard = ({
                   style={{ pointerEvents: 'auto' }}
                 >
                   <MonthYearPicker
-                    defaultMonth={selectedDate}
+                    defaultDate={selectedDate}
                     onMonthYearChange={handleMonthYearChange}
                     onClose={() => setIsMonthSelectorOpen(false)}
                     onApply={handleDateChangeApply}
